@@ -28,7 +28,7 @@ const Foundations = () => {
                     "Python is a high-level language focused on readability and fast development.",
                 points: [
                     "High-level means you write human-friendly code, not low-level machine instructions.",
-                    "Python is used for scripting, web, automation, data, tooling, AI, and backend services.",
+                    "Python is used for scripting, web, automation, data, tooling, digital tooling, and backend services.",
                     "Python code is usually executed by CPython (the most common interpreter).",
                 ],
                 example: `# Python reads like plain English

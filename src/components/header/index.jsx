@@ -1,44 +1,17 @@
-// Header.jsx
-import React, { useEffect, useMemo, useState } from "react";
-import { Styled } from "./styled";
-import transparentLogo from "/images/transparentLogo.png";
+import { useEffect, useState } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
+import { Styled } from "./styled";
 
-const Header = () => {
+export default function Header() {
     const [logoLoaded, setLogoLoaded] = useState(false);
-    const [theme, setTheme] = useState("dark");
+    const [theme, setTheme] = useState(() => localStorage.getItem("app-theme") || "dark");
+    const nextTheme = theme === "light" ? "dark" : "light";
 
-    // Initialize theme from localStorage or default
     useEffect(() => {
-        const storedTheme = localStorage.getItem("app-theme");
-        const initialTheme = storedTheme || "dark";
-        setTheme(initialTheme);
-
-        if (initialTheme === "light") {
-            document.documentElement.setAttribute("data-theme", "light");
-        } else {
-            document.documentElement.removeAttribute("data-theme");
-        }
-    }, []);
-
-    // Apply theme + persist
-    useEffect(() => {
-        if (theme === "light") {
-            document.documentElement.setAttribute("data-theme", "light");
-        } else {
-            document.documentElement.removeAttribute("data-theme");
-        }
-
+        if (theme === "light") document.documentElement.setAttribute("data-theme", "light");
+        else document.documentElement.removeAttribute("data-theme");
         localStorage.setItem("app-theme", theme);
     }, [theme]);
-
-    const nextTheme = useMemo(() => {
-        return theme === "light" ? "dark" : "light";
-    }, [theme]);
-
-    const handleToggle = () => {
-        setTheme(nextTheme);
-    };
 
     return (
         <Styled.Wrapper>
@@ -46,41 +19,32 @@ const Header = () => {
                 <div className="logoNameThemeToggleWrapper">
                     <div className="logoNameWrapper">
                         <div className="logoWrapper">
-                            {!logoLoaded && <div className="logoSkeleton" />}
+                            {!logoLoaded && <div className="logoSkeleton" aria-hidden="true" />}
                             <img
-                                src={transparentLogo}
-                                alt="python-core-notes"
+                                src="/python-core-notes/logo.png"
+                                alt="Ashish Ranjan logo"
                                 onLoad={() => setLogoLoaded(true)}
                                 style={{ opacity: logoLoaded ? 1 : 0 }}
                             />
                         </div>
-
                         <div className="nameWrapper">
-                            <div className="title">python-core-notes</div>
-                            <div className="subTitle">
-                                At-a-glance python revision
-                            </div>
+                            <div className="title">Python Core Notes</div>
+                            <div className="subTitle">At-a-glance Python revision</div>
                         </div>
                     </div>
-
                     <button
                         type="button"
                         className="themeToggleBtn"
-                        onClick={handleToggle}
+                        onClick={() => setTheme(nextTheme)}
                         aria-label={`Switch to ${nextTheme} theme`}
-                        title={`Switch to ${nextTheme}`}
+                        title={`Switch to ${nextTheme} theme`}
+                        aria-pressed={theme === "light"}
                     >
-                        <span className="icon">
-                            {theme === "light" ? <FiMoon /> : <FiSun />}
-                        </span>
-                        <span className="label">
-                            {theme === "light" ? "Light" : "Dark"}
-                        </span>
+                        <span className="icon">{theme === "light" ? <FiMoon /> : <FiSun />}</span>
+                        <span className="label">{theme === "light" ? "Light" : "Dark"}</span>
                     </button>
                 </div>
             </Styled.Main>
         </Styled.Wrapper>
     );
-};
-
-export default Header;
+}
